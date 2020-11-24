@@ -63,7 +63,7 @@ class User extends Authenticatable
         return $this->belongsToMany(Role::class, 'users_roles');
     }
 
-    public function has_role($rol) {
+    public function hasRole($rol) {
         foreach ($this->roles as $unRol) {
             if ($unRol->description === $rol) {
                 return true;
