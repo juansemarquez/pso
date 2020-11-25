@@ -12,7 +12,7 @@
                         <h2>Add new teacher</h2>
                     </div>
                     <div class="pull-right">
-                        <a class="btn btn-primary" href="{{ route('teacher.index') }}">Back</a>
+                        <a class="btn btn-primary" href="{{ route('teachers.index') }}">Back</a>
                     </div>
 @if ($errors->any())
     <div class="alert alert-danger">
@@ -25,7 +25,7 @@
     </div>
 @endif
 
-<form action="{{ route('teacher.store') }}" method="POST">
+<form action="{{ route('teachers.store') }}" method="POST">
     @csrf
      <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12">

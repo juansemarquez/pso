@@ -11,7 +11,7 @@
             <h2>Edit teacher</h2>
         </div>
         <div class="pull-right">
-            <a class="btn btn-primary" href="{{ route('teacher.index') }}">Back</a>
+            <a class="btn btn-primary" href="{{ route('teachers.index') }}">Back</a>
         </div>
     </div>
 </div>
@@ -26,7 +26,7 @@
         </ul>
     </div>
 @endif
-<form action="{{ route('teacher.update', $teacher->id ) }}" method="POST">
+<form action="{{ route('teachers.update', $teacher->id ) }}" method="POST">
     @csrf
     @method('PUT')
 

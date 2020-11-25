@@ -12,7 +12,7 @@
             </div>
             @can('create',App\Models\Teacher::class)
             <div class="pull-right">
-                <a class="btn btn-success" href="{{ route('teacher.create') }}">Add new teacher</a>
+                <a class="btn btn-success" href="{{ route('teachers.create') }}">Add new teacher</a>
             </div>
             @endcan
         </div>
@@ -36,13 +36,13 @@
             <td>{{ $teacher->user->email }}</td>
             <td>
             @can('delete',$teacher)
-                <form action="{{ route('teacher.destroy',$teacher->id) }}" method="POST">
+                <form action="{{ route('teachers.destroy',$teacher->id) }}" method="POST">
             @endcan
             @can('view',$teacher)
-                    <a class="btn btn-info" href="{{ route('teacher.show',$teacher->id) }}">Show</a>
+                    <a class="btn btn-info" href="{{ route('teachers.show',$teacher->id) }}">Show</a>
             @endcan
             @can('update',$teacher)
-                    <a class="btn btn-primary" href="{{ route('teacher.edit',$teacher->id) }}">Edit</a>
+                    <a class="btn btn-primary" href="{{ route('teachers.edit',$teacher->id) }}">Edit</a>
             @endcan
             @can('delete',$teacher)
                     @csrf

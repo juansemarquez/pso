@@ -11,7 +11,7 @@
                 <h2>Teacher's information</h2>
             </div>
             <div class="pull-right">
-                <a class="btn btn-primary" href="{{ route('teacher.index') }}">Back</a>
+                <a class="btn btn-primary" href="{{ route('teachers.index') }}">Back</a>
             </div>
         </div>
     </div>
