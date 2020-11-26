@@ -67,7 +67,7 @@ class TeacherController extends Controller
         $teacher->user()->associate($user);
         $teacher->save();
         
-        return redirect()->route('teacher.index')
+        return redirect()->route('teachers.index')
                         ->with('success','Teacher successfully created');
     }
 
@@ -127,7 +127,7 @@ class TeacherController extends Controller
             $user->roles()->detach(\App\Models\Role::where('description', 'admin')->first());
         }
 
-        return redirect()->route('teacher.index')
+        return redirect()->route('teachers.index')
                  ->with('success','Teacher\'s data successfully updated');
         //
     }
@@ -144,7 +144,7 @@ class TeacherController extends Controller
         $user = $teacher->user;
         $teacher->delete();
         $user->delete();
-        return redirect()->route('teacher.index')
+        return redirect()->route('teachers.index')
                         ->with('success','Teacher deleted successfully.');
     }
 }

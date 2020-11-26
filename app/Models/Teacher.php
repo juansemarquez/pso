@@ -16,6 +16,11 @@ class Teacher extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function groups()
+    {
+        return $this->hasMany(Group::class);
+    }
+
     public function makeAdmin()    
     {
         if ( ! $this->user->hasRole('admin') ) {

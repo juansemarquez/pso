@@ -87,7 +87,6 @@ class TeachersTest extends TestCase
         $t = Teacher::factory()->create();
         $this->actingAs($t->user);
         $this->get('/teachers')->assertStatus(403);
-
     }
 
 
