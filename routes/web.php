@@ -17,6 +17,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 Route::resource('teachers','\App\Http\Controllers\TeacherController')->middleware('auth');
+Route::resource('groups','\App\Http\Controllers\GroupController')->middleware('auth');
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return view('dashboard');
 })->name('dashboard');
