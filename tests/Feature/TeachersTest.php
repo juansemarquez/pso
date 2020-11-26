@@ -24,6 +24,7 @@ class TeachersTest extends TestCase
      */
     public function test_an_admin_can_create_a_teacher()
     {
+        //$this->withoutExceptionHandling();
         $this->actingAs(\App\Models\User::where('name','admin')->first());
         $attributes = [
             'first_name' => $this->faker->firstName(),
@@ -55,6 +56,7 @@ class TeachersTest extends TestCase
 
     public function test_an_admin_can_see_and_edit_existing_teacher() 
     {
+        //$this->withoutExceptionHandling();
         $this->actingAs(\App\Models\User::where('name','admin')->first());
         $t = Teacher::factory()->create();
         $attributes = [
@@ -71,6 +73,7 @@ class TeachersTest extends TestCase
 
     public function test_an_admin_can_delete_existing_teacher() 
     {
+        //$this->withoutExceptionHandling();
         $this->actingAs(\App\Models\User::where('name','admin')->first());
         $t = Teacher::factory()->create();
         $this->get('/teachers')->assertSee($t->user->email);
@@ -78,7 +81,9 @@ class TeachersTest extends TestCase
         $this->get('/teachers')->assertDontSee($t->user->email);
     }
 
-    public function test_a_non_admin_user_cannot_see_teachers() {
+    public function test_a_non_admin_user_cannot_see_teachers()
+    {
+        //$this->withoutExceptionHandling();
         $t = Teacher::factory()->create();
         $this->actingAs($t->user);
         $this->get('/teachers')->assertStatus(403);

@@ -15,8 +15,8 @@ class TeacherController extends Controller
      */
     public function index()
     {
-        $groups = Group::with('user')->get();
         $this->authorize('viewAny', Teacher::class);
+        $teachers = Teacher::with('user')->get();
         return view('teachers.index',compact('teachers'));
     }
 
