@@ -47,9 +47,23 @@ class TeacherController extends Controller
             'password' => 'required|min:8',
             'password-repeat' => 'required|same:password'
         ]);
-        $user = new \App\Models\User;
-        $user->name = strtolower(substr(trim($request['first_name']),0,1) .
+        
+        $userName = strtolower(substr(trim($request['first_name']),0,1) .
                                  trim($request ['last_name']));
+        $counter = 0;
+        while ( true ) {
+            if ( \App\Models\User::where('name',$userName)->count() == 0 ) {
+                $counter = 0;
+                break;
+            }
+            else {
+                $counter++;
+                $userName = $userName . $counter;
+            }
+        }
+
+        $user = new \App\Models\User;
+        $user->name = $userName;
         $user->password = bcrypt($request['password']);
         $user->email = trim($request['email']);
         $now = new \Datetime();

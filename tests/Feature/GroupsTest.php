@@ -8,7 +8,7 @@ use Tests\TestCase;
 use App\Models\Group;
 use App\Models\Teacher;
 
-class GroupTest extends TestCase
+class GroupsTest extends TestCase
 {
     use WithFaker, RefreshDatabase;
     public function setUp():void
