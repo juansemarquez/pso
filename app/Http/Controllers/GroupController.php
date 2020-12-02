@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Auth;
 
 use App\Models\Group;
 use App\Models\Teacher;
+use App\Models\Student;
 use Illuminate\Http\Request;
 
 class GroupController extends Controller
@@ -66,7 +67,10 @@ class GroupController extends Controller
     public function show(Group $group)
     {
         $this->authorize('view', $group);
-        return view('groups.show',compact('group'));
+        $teacher = Teacher::where('user_id',Auth::id())->first();
+        $group->load('students');
+        $studentsInOtherGroups = $group->otherStudents();
+        return view('groups.show',['group'=>$group, 'otherStudents' => $studentsInOtherGroups]);
     }
 
     /**
@@ -116,4 +120,34 @@ class GroupController extends Controller
                  ->with('success','Group successfully deleted');
 
     }
+
+    public function addStudent(Request $request) {
+        return $this->addOrRemoveStudent($request);
+    }
+
+    public function removeStudent(Request $request) {
+        return $this->addOrRemoveStudent($request, false);
+    }
+
+    public function addOrRemoveStudent(Request $request, $add = true) {
+        $request->validate([
+            'group_id' => 'required|int',
+            'student_id' => 'required|int'
+        ]);
+        $teacher = Teacher::where('user_id', Auth::id())->first();
+        $group = Group::findOrFail($request['group_id']);
+        if (! $group->teacher->id === $teacher->id ) {
+            abort(403, 'This group doesn\'t belong to you');
+        }
+        $student = Student::findOrFail($request['student_id']);
+        if ($add) {
+            $group->students()->attach($student);
+        }
+        else {
+            $group->students()->detach($student);
+        }
+        $group->save();
+        return $this->show($group);
+    } 
+    
 }

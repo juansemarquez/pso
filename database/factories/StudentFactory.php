@@ -2,18 +2,19 @@
 
 namespace Database\Factories;
 
-use App\Models\Teacher;
+use App\Models\Student;
 use App\Models\User;
+use App\Models\Group;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class TeacherFactory extends Factory
+class StudentFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = Teacher::class;
+    protected $model = Student::class;
 
     /**
      * Define the model's default state.
@@ -25,7 +26,6 @@ class TeacherFactory extends Factory
         $first = $this->faker->firstName;
         $last = $this->faker->lastName;
         $username = strtolower($first[0]) . strtolower($last);
-
         $counter = 0;
         while ( true ) {
             if ( \App\Models\User::where('name',$username)->count() == 0 ) {
@@ -38,10 +38,9 @@ class TeacherFactory extends Factory
             }
         }
         $u = User::factory()->create(['name' => $username]);
-        $r = \App\Models\Role::where('description', 'teacher')->first();
+        $r = \App\Models\Role::where('description', 'student')->first();
         $u->roles()->attach($r);
         $u->save();
-                
         return [
             'first_name' => $first, 
             'last_name' => $last, 
