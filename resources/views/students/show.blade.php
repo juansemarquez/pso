@@ -27,6 +27,27 @@
             </div>
         </div>
 
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <div class="form-group">
+                <strong>Email:</strong> {{ $student->user->email}}
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <strong>Groups</strong>
+            <ul>
+            @forelse ($student->groups as $group)
+                @can('update',$group)
+                <li><a href="{{route('groups.show',$group->id)}}">{{$group->name}}
+                    ({{$group->description}})</a></li>
+                @else
+                <li>{{$group->name}} ({{$group->description}})</a></li>
+                @endcan
+            @empty
+                 <li>This student is not included in any group.</li>
+            @endforelse
+            </ul>
+        </div>
+
         
     </div>
                 </div>

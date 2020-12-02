@@ -110,7 +110,7 @@ class StudentController extends Controller
     {
         $this->authorize('view', $student);
         $student->load('user');
-        $students->load('groups');
+        $student->load('groups');
         $student->user->load('roles');
         return view('students.show',compact('student'));
     }
