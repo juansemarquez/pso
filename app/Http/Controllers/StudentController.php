@@ -22,12 +22,15 @@ class StudentController extends Controller
         $teacher = Teacher::where('user_id', Auth::id())->first();
         $teacher->load('groups.students');
         $students = [];
+        $student_ids = [];
         foreach ($teacher->groups as $group) {
             foreach ($group->students as $student) {
-                $students[] = $student;
+                if (!in_array($student->id, $student_ids) {
+                    $students[] = $student;
+                    $student_ids[] = $student->id;
+                }
             }
         }
-        array_values(array_unique($students));
         return view('students.index',compact('students'));
     }
 

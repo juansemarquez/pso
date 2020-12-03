@@ -42,4 +42,10 @@ class Teacher extends Model
             $this->user->load('roles');
         }
     }
+
+    public function questionBanks()
+    {
+        return $this->hasMany(\App\Models\QuestionBank::class);
+    }
+
 }
