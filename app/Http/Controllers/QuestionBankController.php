@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\QuestionBank;
 use App\Models\Question;
 use App\Models\Answer;
+use App\Models\Teacher;
 use Illuminate\Http\Request;
 
 class QuestionBankController extends Controller
@@ -53,12 +54,8 @@ class QuestionBankController extends Controller
 
         $request->validate([
             'name' => 'required',
-            'questions' => 'required|array|min:1',
-            'questions.*.text' => 'required|string',
-            'questions.*.answers' => 'required|array|min:2',
-            'questions.*.answers.*.text' => 'required',
-            'questions.*.answers.*.percentage_of_question' => 'required|numeric|min:0|max:100'
         ]);
+        $teacher = Teacher::where('user_id', Auth::id())->first();
         $qb = new QuestionBank();
         $qb->name = $request['name'];
         if (isset($request['description']) && strlen($request['description'])>0 ) {
@@ -67,24 +64,29 @@ class QuestionBankController extends Controller
         else {
             $qb->description = null; 
         }
+        $qb->teacher()->associate($teacher);
         $qb->save();
-        foreach ($request['questions'] as $question) {
-            $q = new Question();
-            $q->text = $question['text'];
-            $q->question_bank()->associate($qb);
-            $q->save();
-            foreach ($question['answers'] as $answer) {
-                $a = new Answer();
-                $a->text = $answer['text'];
-                $a->percentage_of_question = $answer['percentage_of_question'];
-                $a->question()->associate($q);
-                $a->save();
-            }
-        }
-        return redirect()->route('question_banks.index')
+        return redirect()->route('question_banks.show', $qb)
                         ->with('success','Question bank successfully created');
     }
 
+    /**
+     * Show the form for creating a new question for this QuestionBank.
+     *
+     * @param  \App\Models\QuestionBank  $questionBank
+     * @return \Illuminate\Http\Response
+     */
+    public function createQuestion($questionBankId)
+    {
+        if (! Auth::user()->hasRole('teacher') ) {
+            abort(403, 'Only teachers can manage question banks.');
+        }
+        $questionBank = QuestionBank::findOrFail($questionBankId);
+        if (!$this->isOwn($questionBank)) {
+            abort(403, 'You\'re not allowed to modify this question bank.');
+        }
+        return view('question_banks.create_question', ['questionBank'=>$questionBank]);
+    }
     /**
      * Store a newly created question and associates it to the question bank
      *
@@ -98,13 +100,13 @@ class QuestionBankController extends Controller
         }
 
         $request->validate([
-            'question_bank_id' => 'required|numeric|exists:question_banks',
+            'question_bank_id' => 'required|numeric|exists:question_banks,id',
             'text' => 'required',
-            'answers' => 'required|array|min:2',
-            'answers.*.text' => 'required',
-            'answers.*.percentage_of_question' => 'required|numeric|min:0|max:100'
+            'answerText' => 'required|array|min:2',
+            'answerValue' => 'required|array|min:2',
+            'answerText.*' => 'required',
+            'answerValue.*' => 'required|numeric|min:0|max:100'
         ]);
-        
         $qb = QuestionBank::findOrFail($request['question_bank_id']);
         
         // Is this teacher the owner of the Question Bank?
@@ -113,17 +115,19 @@ class QuestionBankController extends Controller
         }
 
         $q = new Question();
-        $q->text = $question['text'];
+        $q->text = $request['text'];
         $q->question_bank()->associate($qb);
         $q->save();
-        foreach ($question['answers'] as $answer) {
+        $i = 0;
+        foreach ($request['answerText'] as $answer) {
             $a = new Answer();
-            $a->text = $answer['text'];
-            $a->percentage_of_question = $answer['percentage_of_question'];
+            $a->text = $answer;
+            $a->percentage_of_question = $request['answerValue'][$i];
             $a->question()->associate($q);
             $a->save();
+            $i++;
         }
-        return redirect()->route('question_banks.show',['questionBank'=>$q->question_bank])
+        return view('question_banks.show',['questionBank'=>$qb])
                          ->with('success','Question successfully created');
     }
 
@@ -218,6 +222,21 @@ class QuestionBankController extends Controller
     }
 
     /**
+     * Show the form for editing the specified question.
+     *
+     * @param  \App\Models\QuestionBank  $question
+     * @return \Illuminate\Http\Response
+     */
+    public function editQuestion($question)
+    {        
+        $question = Question::findOrFail($question);
+        if (! Auth::user()->hasRole('teacher') || !$this->isOwn($question) ) {
+            abort(403, 'Only teachers can manage question banks.');
+        }
+        return view('question_banks.edit_question',compact('question'));
+    }
+
+    /**
      * Update a question
      *
      * @param  \Illuminate\Http\Request  $request
@@ -231,7 +250,12 @@ class QuestionBankController extends Controller
         }
 
         $request->validate([
-            'text' => 'required'
+            'question_id' => 'required|numeric|exists:questions,id',
+            'text' => 'required',
+            'answerText' => 'required|array|min:2',
+            'answerValue' => 'required|array|min:2',
+            'answerText.*' => 'required',
+            'answerValue.*' => 'required|numeric|min:0|max:100'
         ]);
         
         $question = Question::findOrFail($question_id);
@@ -242,10 +266,22 @@ class QuestionBankController extends Controller
         }
 
         $question->update(['text'=>$request['text']]);
-        
-        return redirect()->route('question_banks.edit',['questionBank'=>$question->question_bank])
-                        ->with('success','Question text successfully updated');
-        
+        foreach ($question->answers as $answer) {
+            $answer->question()->dissociate();
+            $answer->delete();
+        }
+        $i = 0;
+        foreach ($request['answerText'] as $ans) {
+            $a = new Answer();
+            $a->text = $ans;
+            $a->percentage_of_question = $request['answerValue'][$i];
+            $a->question()->associate($question);
+            $a->save();
+            $i++;
+        }
+                
+        return redirect()->route('question_banks.show', $question->question_bank)
+                        ->with('success','Question successfully updated');
     }
 
     /**
@@ -317,7 +353,7 @@ class QuestionBankController extends Controller
         $bank = $question->question_bank; 
         $question->delete();
 
-        return redirect()->route('question_banks.show', ['questionBank'=>$bank])
+        return redirect()->route('question_banks.show', $bank)
                         ->with('success','Question deleted successfully.');
     }
 

@@ -25,7 +25,7 @@ class StudentController extends Controller
         $student_ids = [];
         foreach ($teacher->groups as $group) {
             foreach ($group->students as $student) {
-                if (!in_array($student->id, $student_ids) {
+                if (!in_array($student->id, $student_ids)) {
                     $students[] = $student;
                     $student_ids[] = $student->id;
                 }

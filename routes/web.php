@@ -20,16 +20,18 @@ Route::resource('teachers','\App\Http\Controllers\TeacherController')->middlewar
 Route::resource('groups','\App\Http\Controllers\GroupController')->middleware('auth');
 
 Route::resource('students','\App\Http\Controllers\StudentController')->middleware('auth');
-Route::post('/group/addstudent','\App\Http\Controllers\GroupController@addStudent')->middleware('auth')->name('addStudent');
-Route::post('/group/removestudent','\App\Http\Controllers\GroupController@removeStudent')->middleware('auth')->name('removeStudent');
+Route::post('group/addstudent','\App\Http\Controllers\GroupController@addStudent')->middleware('auth')->name('addStudent');
+Route::post('group/removestudent','\App\Http\Controllers\GroupController@removeStudent')->middleware('auth')->name('removeStudent');
 
 Route::resource('question_banks','\App\Http\Controllers\QuestionBankController')->middleware('auth');
-Route::post('questions','\App\Http\Controllers\QuestionBankController@storeQuestion')->middleware('auth');
-Route::post('answers','\App\Http\Controllers\QuestionBankController@storeAnswer')->middleware('auth');
-Route::put('questions','\App\Http\Controllers\QuestionBankController@updateQuestion')->middleware('auth');
-Route::put('answers','\App\Http\Controllers\QuestionBankController@updateAnswer')->middleware('auth');
-Route::delete('questions','\App\Http\Controllers\QuestionBankController@destroyQuestion')->middleware('auth');
-Route::delete('answers','\App\Http\Controllers\QuestionBankController@destroyAnswer')->middleware('auth');
+Route::get('question_banks/{id}/create/','\App\Http\Controllers\QuestionBankController@createQuestion')->middleware('auth')->name('create_question');
+Route::post('questions','\App\Http\Controllers\QuestionBankController@storeQuestion')->middleware('auth')->name('store_question');
+//Route::post('answers','\App\Http\Controllers\QuestionBankController@storeAnswer')->middleware('auth');
+Route::get('questions/{id}/edit/','\App\Http\Controllers\QuestionBankController@editQuestion')->middleware('auth')->name('edit_question');
+Route::put('questions/{id}','\App\Http\Controllers\QuestionBankController@updateQuestion')->middleware('auth')->name('update_question');
+//Route::put('answers','\App\Http\Controllers\QuestionBankController@updateAnswer')->middleware('auth');
+Route::delete('questions/{question}','\App\Http\Controllers\QuestionBankController@destroyQuestion')->middleware('auth')->name('delete_question');
+//Route::delete('answers','\App\Http\Controllers\QuestionBankController@destroyAnswer')->middleware('auth');
 
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
