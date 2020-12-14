@@ -34,6 +34,11 @@ Route::delete('questions/{question}','\App\Http\Controllers\QuestionBankControll
 //Route::delete('answers','\App\Http\Controllers\QuestionBankController@destroyAnswer')->middleware('auth');
 
 
+Route::resource('exams','\App\Http\Controllers\ExamController')->middleware('auth');
+Route::post('exams.add_group', '\App\Http\Controllers\ExamController@addGroup')
+    ->middleware('auth')->name('assign_to_group');
+Route::post('exams.remove_group', '\App\Http\Controllers\ExamController@removeGroup')
+    ->middleware('auth')->name('unassign_group');
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return view('dashboard');
 })->name('dashboard');

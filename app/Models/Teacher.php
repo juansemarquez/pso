@@ -48,4 +48,9 @@ class Teacher extends Model
         return $this->hasMany(\App\Models\QuestionBank::class);
     }
 
+    public function exams()
+    {
+        return $this->hasManyThrough(Exam::class, QuestionBank::class);
+    }
+
 }

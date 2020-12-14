@@ -32,7 +32,7 @@ class QuestionBank extends Model
                 }
                 $atLeastOneIs100 = false;
                 foreach ($question->answers as $answer) {
-                    if ( $answer->percentage_of_question === 100) {
+                    if ( $answer->percentage_of_question == 100) {
                         $atLeastOneIs100 = true;
                         break;
                     }
