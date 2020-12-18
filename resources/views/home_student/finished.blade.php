@@ -17,7 +17,7 @@
                     <tr>
                       @forelse ($exams as $exam)
                       <td>{{$exam->exam->name}}</td>
-                      <td>{{$exam->exam->questionBank}}</td>
+                      <td>{{$exam->exam->questionBank->name}}</td>
                       <td>{{$exam->finished}}</td>
                       <td>
                         <a href="{{route('show_exam',$exam->id)}}" class="btn btn-primary">

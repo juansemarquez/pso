@@ -22,7 +22,7 @@
                       @forelse ($exams as $exam)
                       <tr>                     
                           <td>{{$exam->exam->name}}</td>
-                          <td>{{$exam->exam->questionBank}}</td>
+                          <td>{{$exam->exam->questionBank->name}}</td>
                           <td>{{$exam->exam->from}}</td>
                           <td>{{$exam->exam->until}}</td>
                       </tr>   

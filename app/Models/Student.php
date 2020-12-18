@@ -43,7 +43,8 @@ class Student extends Model
         $now = new \DateTime();
         $active = [];
         foreach ($this->examSheets as $oneExam) {
-            if ( $oneExam->exam->from < $now //&& $oneExam->exam->until > $now 
+            if ( new \DateTime($oneExam->exam->from) < $now 
+                && new\DateTime($oneExam->exam->until) > $now
                 && is_null($oneExam->started) && is_null($oneExam->finished)
                 ) {
                 $active[] = $oneExam;
@@ -69,7 +70,7 @@ class Student extends Model
         $future = [];
         $now = new \DateTime();
         foreach ($this->examSheets as $oneExam) {
-            if ($oneExam->exam->from > $now && is_null($oneExam->started) ) {
+            if (new \DateTime($oneExam->exam->from) > $now && is_null($oneExam->started) ) {
                 $future[] = $oneExam;
             }
         }
