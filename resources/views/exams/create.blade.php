@@ -45,9 +45,9 @@
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="form-group">
                 <strong>Question bank:</strong>
-                <select name="question_bank_id">
+                <select name="question_bank_id" onchange="changeMax();" id="q">
                     @foreach ($question_banks as $qb)
-                    <option value="{{$qb->id}}">
+                    <option value="{{$qb->id}}" data-q="{{$qb->questions()->count()}}">
                         {{$qb->name}} ({{$qb->questions()->count()}} questions)
                     </option>
                     @endforeach
@@ -82,7 +82,7 @@
             <div class="form-group">
                 <strong>Number of questions:</strong>
                 <input type="number" min="1" class="form-control"
-                 name="number_of_questions" value="10">
+                 name="number_of_questions" value="10" id="noq">
             </div>
         </div>
         <div class="col-xs-12 col-sm-12 col-md-12 text-center">
@@ -96,4 +96,14 @@
             </div>
         </div>
     </div>
+<script>
+changeMax();
+function changeMax() {
+    var q = document.getElementById("q");
+    var i = q.options.selectedIndex;
+    var num = q.options[i].dataset.q;
+    var noq = document.getElementById("noq");
+    noq.max = num;
+}
+</script>
 @endsection

@@ -29,4 +29,50 @@ class Student extends Model
         }
         return false;
     }
+
+    public function exams() {
+        return $this->belongsToMany(Exam::class,'exams_students');
+    }
+
+    public function examSheets() {
+        return $this->hasMany(ExamSheet::class);
+    }
+
+    public function activeExams()
+    {
+        $now = new \DateTime();
+        $active = [];
+        foreach ($this->examSheets as $oneExam) {
+            if ( $oneExam->exam->from < $now //&& $oneExam->exam->until > $now 
+                && is_null($oneExam->started) && is_null($oneExam->finished)
+                ) {
+                $active[] = $oneExam;
+            }
+        }
+        return $active;
+    }
+
+    public function finishedExams()
+    {
+        $finished = [];
+        foreach ($this->examSheets as $oneExam) {
+            if ($oneExam->is_done() && $oneExam->is_valid()) {
+                if (is_null($oneExam->result)) { $oneExam->calculateResult(); }
+                $finished[] = $oneExam;
+            }
+        }
+        return $finished;
+    }
+
+    public function futureExams()
+    {
+        $future = [];
+        $now = new \DateTime();
+        foreach ($this->examSheets as $oneExam) {
+            if ($oneExam->exam->from > $now && is_null($oneExam->started) ) {
+                $future[] = $oneExam;
+            }
+        }
+        return $future;
+    }
 }

@@ -16,13 +16,13 @@ class QuestionsExamsStudents extends Migration
         Schema::create('questions_exams_students', function (Blueprint $table) {
             $table->unsignedBigInteger('exams_students_id');
             $table->unsignedBigInteger('question_id');
-            $table->unsignedBigInteger('answer_chosen_id')->nullable();
+            $table->unsignedBigInteger('answer_id')->nullable();
 
             $table->foreign('exams_students_id')
                   ->references('id')->on('exams_students')->onDelete('cascade');
             $table->foreign('question_id')
                   ->references('id')->on('questions')->onDelete('cascade');
-            $table->foreign('answer_chosen_id')
+            $table->foreign('answer_id')
                   ->references('id')->on('answers')->onDelete('cascade');
             
             $table->primary(['exams_students_id','question_id']);

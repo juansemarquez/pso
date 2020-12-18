@@ -28,6 +28,13 @@
      <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="form-group">
+                <strong>Email:</strong>
+                <input type="email" class="form-control" name="email" placeholder="Email">
+            </div>
+        </div>
+        
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <div class="form-group">
                 <strong>First Name:</strong>
                 <input type="text" name="first_name" class="form-control" placeholder="First Name">
             </div>
@@ -40,13 +47,6 @@
             </div>
         </div>
 
-        <div class="col-xs-12 col-sm-12 col-md-12">
-            <div class="form-group">
-                <strong>Email:</strong>
-                <input type="email" class="form-control" name="email" placeholder="Email">
-            </div>
-        </div>
-        
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="form-group">
                 <strong>Password:</strong>
@@ -63,7 +63,7 @@
 
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="form-group">
-                <strong>Grupo/s a los que pertenece:</strong><br>
+                <strong>Group/s:</strong><br>
                 @foreach ($groups as $group)
                 <input type="checkbox" name="group[{{$group->id}}]" value="{{$group->id}}">
                 {{$group->name}} ({{$group->description}})<br>

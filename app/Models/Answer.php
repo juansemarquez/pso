@@ -11,6 +11,6 @@ class Answer extends Model
     protected $fillable = [ 'text', 'percentage_of_question' ];
     public function question()
     {
-        return $this->belongsTo(\App\Models\Answer::class);
+        return $this->belongsTo(\App\Models\Question::class);
     }
 }

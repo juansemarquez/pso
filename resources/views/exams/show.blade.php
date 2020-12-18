@@ -60,7 +60,7 @@
             @empty
                 <tr><td colspan="3">This exam hasn't been assigned to any groups yet.</td></li>
             @endforelse                
-            </ul>
+            </table>
         </div>
 
         <div class="col-xs-12 col-sm-12 col-md-12">
